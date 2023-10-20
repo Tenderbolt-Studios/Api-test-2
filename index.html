@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Waifu-api-test</title>
+    <meta name="description" content="This is just a test point of a free api found on github.cool-guy-dev is not responsible for anything." />
+    <style>
+      html,body{
+        margin:0px;
+        height:100%;
+        width:100%;
+      }
+      body{
+        background:#111;
+        display:grid;
+        grid-template-rows:auto 1fr;
+        color:yellowgreen;
+        font-family:monospace;
+      }
+      nav{
+        line-height:20px;
+        display:grid;
+        grid-template-columns:1fr auto auto auto;
+        grid-gap:10px;
+        background:#222;
+      }
+      nav *{
+        background:#222;
+        border:none;
+        color:yellowgreen;
+        padding:10px;
+      }
+      nav select{
+        border:1px solid #333;
+        padding:0px 10px;
+        margin:5px;
+        line-height:0px;
+        background:#111;
+      }
+      main{
+        display:grid;
+        grid-template-rows:1fr auto;
+      }
+      main section{
+        display:grid;
+        grid-template-columns:auto auto;
+        height:30px;
+        grid-gap:10px;
+        padding:10px 10px;
+      }
+      #MAIN{
+        text-align:center;
+        height:auto;
+        background-size:100% !important;
+        background-position: center center !important;
+      }
+      main section button{
+        background:#222;
+        border:none;
+        border-radius:5px;
+        color:#777;
+      }
+    </style>
+  </head>
+  <body onload="main()">
+    <nav>
+      <b>waifu-api-test</b>
+      <select id="TYPE">
+        <option value="SFW">SFW</option>
+        <option value="NSFW">NSFW</option>
+      </select>
+      <select id="CATEGORY">
+      </select>
+    </nav>
+    <main id="main">
+      <section id="MAIN"></section>
+      <section>
+        <button onclick="prevBtn()">Back</button>
+        <button onclick="nextBtn()">Next</button>
+      </section>
+    </main>
+    <script type="text/javascript">
+      const SFW = [
+            "waifu",
+            "neko",
+            "shinobu",
+            "megumin",
+            "bully",
+            "cuddle",
+            "cry",
+            "hug",
+            "awoo",
+            "kiss",
+            "lick",
+            "pat",
+            "smug",
+            "bonk",
+            "yeet",
+            "blush",
+            "smile",
+            "wave",
+            "highfive",
+            "handhold",
+            "nom",
+            "bite",
+            "glomp",
+            "slap",
+            "kill",
+            "kick",
+            "happy",
+            "wink",
+            "poke",
+            "dance",
+            "cringe"
+      ];
+      const NSFW = [
+            "waifu",
+            "neko",
+            "trap",
+            "blowjob"
+      ];
+      var URL = [];
+      var waifuLoadNo = -1;
+      var waifuNo = 0;
+      const TYPE = document.getElementById("TYPE");
+      const CATEGORY = document.getElementById("CATEGORY");
+      const MAIN = document.getElementById("MAIN");
+
+      function setOptions(optionsList){
+        while (CATEGORY.options.length > 0) {
+              CATEGORY.remove(0);
+        }
+        for (let i = 0; i < optionsList.length; i++) {
+            const option = document.createElement("option");
+            option.value = optionsList[i];
+            option.text = optionsList[i];
+            CATEGORY.appendChild(option);
+       }
+      }
+      TYPE.addEventListener("change", function() {
+        const Value = TYPE.value;
+        if (Value === 'SFW'){setOptions(SFW);};
+        if (Value === 'NSFW'){setOptions(NSFW);};
+      });
+      function main(){
+        // default sfw only
+        setOptions(SFW)
+      }
+      function loadWaifu(index){
+        if (URL[index]){
+          MAIN.innerText='';
+          var url = URL[index]['url'];
+          console.log(url);
+          MAIN.style.background = `url(${url}) no-repeat`
+        }
+        else{
+          MAIN.innerText="If the content didnt load click Next"
+          MAIN.style.background = "#111";
+          if (waifuNo >= 0){
+            waifuNo -= 1;
+          }
+        }
+      }
+      function loadOptions(){
+        var type = TYPE.value.toLowerCase();
+        var category = CATEGORY.value;
+        var url = `https://api.waifu.pics/${type}/${category}`
+        fetch(url)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then(data => {
+            URL.push(data);
+            waifuLoadNo += 1;
+          })
+          .catch(error => {
+            console.error("Error:", error);
+          });
+      }
+      function prevBtn(){
+        if (waifuNo >= 0){
+          waifuNo -= 1;
+          loadWaifu(waifuNo);
+        }
+      }
+      function nextBtn(){
+        console.log(waifuLoadNo,waifuNo)
+        if (waifuLoadNo<=waifuNo){
+          console.log("get")
+          loadOptions();
+          loadWaifu(waifuNo);
+          waifuNo += 1;
+        }
+        else{
+          loadWaifu(waifuNo);
+          waifuNo += 1;
+        }
+      }
+    </script>
+  </body>
+</html>
