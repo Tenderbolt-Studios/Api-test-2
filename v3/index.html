@@ -78,7 +78,7 @@
         color:#777;
       }
       #fav{
-        color:gold;
+        color:#777;
         width:30px;
         height:30px;
       }
@@ -102,7 +102,7 @@
       <section id="MAIN"></section>
       <section>
         <button onclick="prevBtn()">Back</button>
-        <button onclick="favBtn()" id="fav">&#9733;</button>
+        <button onclick="favBtn(this)" id="fav">&#9733;</button>
         <button onclick="nextBtn()">Next</button>
       </section>
     </main>
@@ -175,6 +175,7 @@
       const CATEGORY = document.getElementById("CATEGORY");
       const MAIN = document.getElementById("MAIN");
       const NOTICE = document.getElementById("notice");
+      const FAV = document.getElementById("fav");
       function notify(content){
         NOTICE.style.display="grid";
         NOTICE.innerText=content+"\n \n To close this dialog CLICK ANYWHERE !";
@@ -257,6 +258,7 @@
         });
       }
       function prevBtn(){
+        FAV.style.color = "#777";
         if (source != 3){
           if (waifuNo >= 0){
             waifuNo -= 1;
@@ -264,13 +266,20 @@
           }
         }
         else{
-          notify("'Previus' button wont work in FAV's,so select image using the second dropdown.")
+          var current = CATEGORY.selectedIndex;
+          CATEGORY.selectedIndex += 1;
+          const changeEvent = new Event("change", {
+            bubbles: true,
+            cancelable: true,
+          });
+          CATEGORY.dispatchEvent(changeEvent);
         }
       }
-      function favBtn(){
+      function favBtn(elem){
         if (source != 3){
           if (waifuNo >= 0){
             console.log(MAIN.getAttribute("url"));
+            elem.style.color = "gold"
             favURL.push(MAIN.getAttribute("url"));
           }
         }
@@ -279,14 +288,20 @@
         }
       }
       function nextBtn(){
-        console.log(waifuLoadNo,waifuNo)
+        FAV.style.color = "#777";
         if (waifuLoadNo<=waifuNo && source != 3){
           loadOptions();
           loadWaifu(waifuNo);
           waifuNo += 1;
         }
         else if (source == 3){
-          notify("'Next' button wont work in FAV's,so select image using the second dropdown.")
+          var current = CATEGORY.selectedIndex;
+          CATEGORY.selectedIndex += 1;
+          const changeEvent = new Event("change", {
+            bubbles: true,
+            cancelable: true,
+          });
+          CATEGORY.dispatchEvent(changeEvent);
         }
         else{
           loadWaifu(waifuNo);
