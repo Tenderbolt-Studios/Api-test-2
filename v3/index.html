@@ -67,7 +67,7 @@
         text-align:center;
         height:auto;
         grid-template-columns:1fr;
-        background-size:100% !important;
+        background-size:auto 100% !important;
         background-position: center center !important;
         background-repeat: no-repeat !important;
       }
@@ -81,6 +81,11 @@
         color:#777;
         width:30px;
         height:30px;
+      }
+      @media only screen and (max-width: 400px) {
+        #MAIN{
+          background-size:100% !important;
+        }
       }
     </style>
   </head>
